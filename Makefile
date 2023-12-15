@@ -4,8 +4,14 @@ build: ## downloads dependencies and create Go binary
 	go mod download
 	go build -o cmd/server api/*.go
 
-run: build ## runs Go binary
+run: build ## start server
 	./cmd/server
+
+run-with-tls: ## start server with TLS enabled
+	TLS=true make run
+
+keys: ## generate self-signed certificates for TLS
+	./ssl/ssl.sh
 
 grpc-client: ## runs gRPC "evans" client. Install client if not present: https://github.com/ktr0731/evans
 # Sample commands:

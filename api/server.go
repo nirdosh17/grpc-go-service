@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net"
+	"os"
 
 	pb "github.com/nirdosh17/protorepo/greet/lib/go"
 	"google.golang.org/grpc"
@@ -24,16 +25,17 @@ func main() {
 	log.Println("listening on", addr)
 
 	opts := []grpc.ServerOption{}
-	tls := false
+	tls := os.Getenv("TLS")
 
-	if tls {
+	if tls == "true" {
 		certFile := "ssl/server.crt"
 		keyFile := "ssl/server.pem"
-		creds, err := credentials.NewClientTLSFromFile(certFile, keyFile)
+		creds, err := credentials.NewServerTLSFromFile(certFile, keyFile)
 
 		if err != nil {
 			log.Fatalln("failed loading credentials", err)
 		}
+		log.Println("TLS enabled")
 		opts = append(opts, grpc.Creds(creds))
 	}
 
